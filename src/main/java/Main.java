@@ -1,11 +1,6 @@
 public class Main {
+    private final Factors factors = new Factors(4707, 0.6, 3.0, 0.02, 0.08, 0.12);
     private double annualGross;
-    private double average = 4707;
-    private final double bottomRate = 0.3;
-    private final double upperRate = 3.0;
-    private double medicalRate = 0.02;
-    private double retireRate = 0.08;
-    private double housingRate = 0.12;
     private double months;
 
     public Main(int annualGross, int months) {
@@ -16,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.printf("%10s%10s%10s%10s%10s%10s%10s%10s%10s\n", "月" ,"年薪", "税前", "税后", "个税", "奖金", "奖金税", "净奖金", "总税");
         for (int i = 12; i <= 20; i++) {
-            run(260000, i);
+            run(200000, i);
         }
     }
 
@@ -78,25 +73,25 @@ public class Main {
     }
 
     private double housingSum() {
-        return socialInsuranceBase() * housingRate;
+        return socialInsuranceBase() * getHousingRate();
     }
 
     private double medicalSum() {
-        return socialInsuranceBase() * medicalRate;
+        return socialInsuranceBase() * getMedicalRate();
     }
 
     private double retireSum() {
-        return socialInsuranceBase() * retireRate;
+        return socialInsuranceBase() * getRetireRate();
     }
 
     public double socialInsuranceBase() {
-        if (monthlyGross() <= average * bottomRate) {
-            return average * bottomRate;
+        if (monthlyGross() <= getAverage() * getBottomRate()) {
+            return getAverage() * getBottomRate();
         } else {
-            if (monthlyGross() > average * bottomRate && monthlyGross() <= average * upperRate) {
+            if (monthlyGross() > getAverage() * getBottomRate() && monthlyGross() <= getAverage() * getUpperRate()) {
                 return monthlyGross();
-            } else if (monthlyGross() > average * upperRate) {
-                return average * upperRate;
+            } else if (monthlyGross() > getAverage() * getUpperRate()) {
+                return getAverage() * getUpperRate();
             } else {
                 throw new IllegalArgumentException();
             }
@@ -122,5 +117,45 @@ public class Main {
         } else {
             return v * 0.4 - 13505;
         }
+    }
+
+    public double getAverage() {
+        return factors.getAverage();
+    }
+
+    public void setAverage(double average) {
+        this.factors.setAverage(average);
+    }
+
+    public double getBottomRate() {
+        return factors.getBottomRate();
+    }
+
+    public double getUpperRate() {
+        return factors.getUpperRate();
+    }
+
+    public double getMedicalRate() {
+        return factors.getMedicalRate();
+    }
+
+    public void setMedicalRate(double medicalRate) {
+        this.factors.setMedicalRate(medicalRate);
+    }
+
+    public double getRetireRate() {
+        return factors.getRetireRate();
+    }
+
+    public void setRetireRate(double retireRate) {
+        this.factors.setRetireRate(retireRate);
+    }
+
+    public double getHousingRate() {
+        return factors.getHousingRate();
+    }
+
+    public void setHousingRate(double housingRate) {
+        this.factors.setHousingRate(housingRate);
     }
 }
