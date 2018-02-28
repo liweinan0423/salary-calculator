@@ -1,22 +1,23 @@
 public class Main {
-    private final Factors factors = new Factors(4707, 0.6, 3.0, 0.02, 0.08, 0.12);
+    private Factors factors;
     private double annualGross;
     private double months;
 
-    public Main(int annualGross, int months) {
+    public Main(int annualGross, int months, Factors factors) {
         this.annualGross = annualGross;
         this.months = months;
+        this.factors = factors;
     }
 
     public static void main(String[] args) {
-        System.out.printf("%10s%10s%10s%10s%10s%10s%10s%10s%10s\n", "月" ,"年薪", "税前", "税后", "个税", "奖金", "奖金税", "净奖金", "总税");
+        System.out.printf("%10s%10s%10s%10s%10s%10s%10s%10s%10s\n", "月", "年薪", "税前", "税后", "个税", "奖金", "奖金税", "净奖金", "总税");
         for (int i = 12; i <= 20; i++) {
             run(200000, i);
         }
     }
 
     private static void run(int annualGross, int months) {
-        Main main = new Main(annualGross, months);
+        Main main = new Main(annualGross, months, new Factors(4707, 0.6, 3.0, 0.02, 0.08, 0.12));
         System.out.printf("%10d", months);
         System.out.printf("%10.2f\t", main.annualGross);
         System.out.printf("%10.2f\t", main.monthlyGross());
@@ -47,7 +48,7 @@ public class Main {
             return bonus() * 0.3 - 2755;
         } else if (v > 55000 && v <= 80000) {
             return bonus() * 0.35 - 5505;
-        } else  {
+        } else {
             return bonus() * 0.4 - 13505;
         }
     }
@@ -73,25 +74,25 @@ public class Main {
     }
 
     private double housingSum() {
-        return socialInsuranceBase() * getHousingRate();
+        return socialInsuranceBase() * housingRate();
     }
 
     private double medicalSum() {
-        return socialInsuranceBase() * getMedicalRate();
+        return socialInsuranceBase() * medicalRate();
     }
 
     private double retireSum() {
-        return socialInsuranceBase() * getRetireRate();
+        return socialInsuranceBase() * retireRate();
     }
 
     public double socialInsuranceBase() {
-        if (monthlyGross() <= getAverage() * getBottomRate()) {
-            return getAverage() * getBottomRate();
+        if (monthlyGross() <= average() * bottomRate()) {
+            return average() * bottomRate();
         } else {
-            if (monthlyGross() > getAverage() * getBottomRate() && monthlyGross() <= getAverage() * getUpperRate()) {
+            if (monthlyGross() > average() * bottomRate() && monthlyGross() <= average() * upperRate()) {
                 return monthlyGross();
-            } else if (monthlyGross() > getAverage() * getUpperRate()) {
-                return getAverage() * getUpperRate();
+            } else if (monthlyGross() > average() * upperRate()) {
+                return average() * upperRate();
             } else {
                 throw new IllegalArgumentException();
             }
@@ -119,43 +120,28 @@ public class Main {
         }
     }
 
-    public double getAverage() {
+    public double average() {
         return factors.getAverage();
     }
 
-    public void setAverage(double average) {
-        this.factors.setAverage(average);
-    }
-
-    public double getBottomRate() {
+    public double bottomRate() {
         return factors.getBottomRate();
     }
 
-    public double getUpperRate() {
+    public double upperRate() {
         return factors.getUpperRate();
     }
 
-    public double getMedicalRate() {
+    public double medicalRate() {
         return factors.getMedicalRate();
     }
 
-    public void setMedicalRate(double medicalRate) {
-        this.factors.setMedicalRate(medicalRate);
-    }
-
-    public double getRetireRate() {
+    public double retireRate() {
         return factors.getRetireRate();
     }
 
-    public void setRetireRate(double retireRate) {
-        this.factors.setRetireRate(retireRate);
-    }
-
-    public double getHousingRate() {
+    public double housingRate() {
         return factors.getHousingRate();
     }
 
-    public void setHousingRate(double housingRate) {
-        this.factors.setHousingRate(housingRate);
-    }
 }
